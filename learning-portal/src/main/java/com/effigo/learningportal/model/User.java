@@ -1,5 +1,7 @@
 package com.effigo.learningportal.model;
 
+import java.sql.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,4 +42,10 @@ public class User {
 
 	@Column(nullable = false)
 	private String password;
+	
+	@Column(name = "created_at", nullable = false)
+	private Date createdAt;
+
+	@Column(name = "updated_at", nullable = false)
+	private Date updatedAt;
 }
