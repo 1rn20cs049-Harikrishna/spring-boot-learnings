@@ -15,9 +15,8 @@ public class AdminServiceImpl implements AdminService {
 
 	
 	@Override
-	public String createUser(User user) {
-
-		return null;
+	public User createUser(User user) {
+		return userRepository.save(user);
 	}
 
 	@Override

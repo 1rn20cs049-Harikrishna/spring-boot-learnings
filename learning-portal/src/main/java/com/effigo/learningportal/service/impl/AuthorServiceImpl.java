@@ -10,15 +10,13 @@ import com.effigo.learningportal.service.AuthorService;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-	private  CourseRepository courseRepository;
-    public AuthorServiceImpl(CourseRepository courseRepository) {
+	private CourseRepository courseRepository;
+
+	public AuthorServiceImpl(CourseRepository courseRepository) {
 		super();
 		this.courseRepository = courseRepository;
 	}
 
-	
-
-	
 	@Override
 	public String createCourse(Course course) {
 

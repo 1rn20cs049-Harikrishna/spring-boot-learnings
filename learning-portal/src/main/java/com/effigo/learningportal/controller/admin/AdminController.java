@@ -19,14 +19,15 @@ import com.effigo.learningportal.service.impl.AdminServiceImpl;
 public class AdminController {
 
 	Logger logger = LoggerFactory.getLogger(AdminController.class);
-	
+
 	@Autowired
 	AdminServiceImpl adminServiceImpl;
 
 	@PostMapping("/create-user")
 	public ResponseEntity<?> createUser(@RequestBody User user) {
 		logger.info("This is create user controller logger");
-		return ResponseEntity.status(HttpStatus.OK).body("User created with provided credentials");
+		 Long id =  adminServiceImpl.createUser(user).getId();
+		return ResponseEntity.status(HttpStatus.OK).body("User created with provided credentials whose id is " + id);
 	}
 
 	@GetMapping()

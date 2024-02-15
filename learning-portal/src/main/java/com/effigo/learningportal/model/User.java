@@ -1,6 +1,7 @@
 package com.effigo.learningportal.model;
 
-import java.sql.Date;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,17 +37,24 @@ public class User {
 	private String email;
 
 	@Column(name = "phone_number", nullable = false)
-	private Long phoneNumber;
+	private BigInteger phoneNumber;
 
 	@Column(nullable = false)
-	private boolean status;
+	private boolean status = true;
 
 	@Column(nullable = false)
 	private String password;
-	
-	@Column(name = "created_at", nullable = false)
-	private Date createdAt;
 
-	@Column(name = "updated_at", nullable = false)
-	private Date updatedAt;
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
+
+	@PrePersist
+	private void DateCreation() {
+		createdAt = LocalDateTime.now();
+		updatedAt = LocalDateTime.now();
+	}
+
 }

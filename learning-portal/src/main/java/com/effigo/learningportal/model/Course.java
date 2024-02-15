@@ -35,10 +35,10 @@ public class Course {
 	@JoinColumn(name = "publisher_id")
 	private User publisher;
 
-	@Column(name = "created_at", nullable = false)
+	@Column(name = "created_at")
 	private Date createdAt;
 
-	@Column(name = "updated_at", nullable = false)
+	@Column(name = "updated_at")
 	private Date updatedAt;
 
 	@Column(nullable = false)
