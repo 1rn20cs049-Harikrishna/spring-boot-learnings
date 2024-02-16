@@ -34,7 +34,7 @@ public class Enrollment {
 	@JoinColumn(name = "course_id")
 	private Course course;
 	
-	@Column(name = "created_at", nullable = false)
+	@Column(name = "created_at")
 	private Date createdAt;
 
 }

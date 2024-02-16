@@ -12,30 +12,48 @@ import com.effigo.learningportal.service.LearnerService;
 
 @Service
 public class LearnerServiceImpl implements LearnerService {
-	
-	@Autowired
-	CourseRepository courseRepository;
-	
-	@Autowired 
-	UserRepository userRepository;
-	
+	private CourseRepository courseRepository;
+
+	private UserRepository userRepository;
+
+	public LearnerServiceImpl(CourseRepository courseRepository, UserRepository userRepository) {
+		this.courseRepository = courseRepository;
+		this.userRepository = userRepository;
+	}
 
 	@Override
-	public List<Course> searchCourse(Long id) {
+	public List<Course> searchCourseById(Long id) {
+		
+		return null;
+	}
+	
+	@Override
+	public List<Course> searchCourseByAuthor(String auhor) {
 		
 		return null;
 	}
 
 	@Override
-	public String addFavourite(Long id) {
-		
+	public List<Course> searchCourseByCategory(Long id) {
+	
+		return null;
+	}
+	
+	
+	
+
+	@Override
+	public String addFavourite(Long uid,Long cid) {
+
 		return null;
 	}
 
 	@Override
-	public String enrollCourse(Long id) {
-		
+	public String enrollCourse(Long uid,Long cid) {
+
 		return null;
 	}
+
+	
 
 }

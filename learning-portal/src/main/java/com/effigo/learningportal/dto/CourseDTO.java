@@ -5,6 +5,9 @@ import java.sql.Date;
 import com.effigo.learningportal.model.CourseCategory;
 import com.effigo.learningportal.model.User;
 
+import lombok.Data;
+
+@Data
 public class CourseDTO {
 	private Long id;
 

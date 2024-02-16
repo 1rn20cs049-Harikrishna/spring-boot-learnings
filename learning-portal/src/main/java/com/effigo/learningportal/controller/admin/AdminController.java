@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.effigo.learningportal.dto.UserDTO;
 import com.effigo.learningportal.model.User;
 import com.effigo.learningportal.service.impl.AdminServiceImpl;
 
@@ -24,10 +25,9 @@ public class AdminController {
 	AdminServiceImpl adminServiceImpl;
 
 	@PostMapping("/create-user")
-	public ResponseEntity<?> createUser(@RequestBody User user) {
+	public ResponseEntity<User> createUser(@RequestBody UserDTO userDTO) {
 		logger.info("This is create user controller logger");
-		 Long id =  adminServiceImpl.createUser(user).getId();
-		return ResponseEntity.status(HttpStatus.OK).body("User created with provided credentials whose id is " + id);
+		return ResponseEntity.status(HttpStatus.CREATED).body(adminServiceImpl.createUser(userDTO));
 	}
 
 	@GetMapping()

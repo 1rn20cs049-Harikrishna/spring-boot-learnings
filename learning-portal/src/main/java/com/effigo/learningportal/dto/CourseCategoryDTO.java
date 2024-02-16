@@ -1,6 +1,6 @@
 package com.effigo.learningportal.dto;
 
-public class CourseCategory {
+public class CourseCategoryDTO {
 
 	private Long id;
 
