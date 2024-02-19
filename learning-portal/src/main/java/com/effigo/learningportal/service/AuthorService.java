@@ -1,9 +1,10 @@
 package com.effigo.learningportal.service;
 
-import com.effigo.learningportal.model.Course;
+import com.effigo.learningportal.dto.CourseDTO;
+import com.effigo.learningportal.model.CourseEntity;
 
 public interface AuthorService {
-	public Course createCourse(Course course);
+	public CourseEntity createCourse(CourseDTO courseDto,Long authorId);
 
-	public Course editCourse(Course course);
+	public CourseEntity editCourse(CourseEntity course);
 }

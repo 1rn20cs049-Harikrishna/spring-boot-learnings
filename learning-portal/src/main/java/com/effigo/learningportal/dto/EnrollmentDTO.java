@@ -2,15 +2,16 @@ package com.effigo.learningportal.dto;
 
 import java.sql.Date;
 
-import com.effigo.learningportal.model.Course;
-import com.effigo.learningportal.model.User;
+import lombok.Data;
 
+@Data
 public class EnrollmentDTO {
-	private Long id;
 
-	private User user;
+    private Long id;
+    private Long userId;
+    private Long courseId;
+    private Date createdAt;
+    private Date updatedAt;
 
-	private Course course;
-
-	private Date createdAt;
+    // Constructors, getters, and setters
 }

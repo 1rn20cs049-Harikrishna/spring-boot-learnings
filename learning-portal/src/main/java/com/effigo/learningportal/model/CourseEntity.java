@@ -1,6 +1,7 @@
 package com.effigo.learningportal.model;
 
 import java.sql.Date;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,8 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,21 +21,25 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Course {
+public class CourseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private String name;
 
 	@ManyToOne
-	@JoinColumn(name = "category_id")
-	private CourseCategory category;
+	@JoinColumn(name = "course_category_id")
+	private Long courseCategory;
+
+	@OneToMany(mappedBy = "course")
+	private Set<EnrollmentEntity> enrollments;
 
 	@ManyToOne
-	@JoinColumn(name = "publisher_id")
-	private User publisher;
+    @JoinColumn(name = "publisher_id")
+    private Long publisher;
+
 
 	@Column(name = "created_at")
 	private Date createdAt;

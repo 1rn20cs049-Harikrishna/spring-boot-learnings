@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -22,28 +21,36 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "role_id")
-	private Roles role;
+	private RolesEntity role;
 
-	@Column(nullable = true)
+	@OneToMany(mappedBy = "user")
+	private Set<EnrollmentEntity> enrollments;
+
+	@OneToMany(mappedBy = "user")
+	private Set<FavouritesEntity> favourites;
+
+	@OneToMany(mappedBy = "publisher")
+	private Set<CourseEntity> publishedCourses;
+
+	@Column()
 	private String name;
 
-	@Column(nullable = true)
+	@Column()
 	private String email;
 
-	@Column(name = "phone_number", nullable = true)
+	@Column(name = "phone_number")
 	private BigInteger phoneNumber;
 
-	@Column(nullable = true)
+	@Column()
 	private boolean status = true;
 
-	@Column(nullable = true)
+	@Column()
 	private String password;
 
 	@Column(name = "created_at")
@@ -51,17 +58,5 @@ public class User {
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
-	
-	
-	@OneToMany(mappedBy = "publisher")
-    private Set<Course> publishedCourses;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Favourites> favourites;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Enrollment> enrollments;
-
-	
 
 }

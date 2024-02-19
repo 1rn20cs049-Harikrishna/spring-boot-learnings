@@ -1,5 +1,8 @@
 package com.effigo.learningportal.dto;
 
+import lombok.Data;
+
+@Data
 public class CourseCategoryDTO {
 
 	private Long id;

@@ -5,15 +5,13 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class CourseDTO {
+public class FavoriteDTO {
 
     private Long id;
-    private String name;
-    private Long courseCategoryId;
-    private Long publisherId;
+    private Long userId;
+    private Long courseId;
     private Date createdAt;
     private Date updatedAt;
-    private boolean status;
 
     // Constructors, getters, and setters
 }

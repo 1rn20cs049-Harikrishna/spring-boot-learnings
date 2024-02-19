@@ -1,10 +1,10 @@
 package com.effigo.learningportal.service;
 
 import com.effigo.learningportal.dto.UserDTO;
-import com.effigo.learningportal.model.User;
+import com.effigo.learningportal.model.UserEntity;
 
 public interface AdminService {
-	public User createUser(UserDTO userDTO);
+	public UserEntity createUser(UserDTO userDTO);
 
 	public String adminHome();
 

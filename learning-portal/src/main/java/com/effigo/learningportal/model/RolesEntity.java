@@ -1,5 +1,6 @@
 package com.effigo.learningportal.model;
 
+import java.sql.Date;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -14,21 +15,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "course_category")
+@Table(name = "roles")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CourseCategory {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RolesEntity {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
+	@OneToMany(mappedBy = "role")
+	private Set<UserEntity> users;
 
-    @Column(nullable = false)
-    private boolean status;
-    
-    @OneToMany(mappedBy = "category")
-    private Set<Course> courses;
+	@Column
+	private String name;
+
+	@Column
+	private boolean status = true;
+
+	@Column(name = "created_at")
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	private Date updatedAt;
+
 }

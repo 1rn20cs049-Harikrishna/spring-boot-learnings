@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.effigo.learningportal.model.User;
+import com.effigo.learningportal.model.UserEntity;
 
 @RestController
 public class loginController {
 
 	@PostMapping("/login")
-	public ResponseEntity<?> userLogin(@RequestBody User user) {
+	public ResponseEntity<?> userLogin(@RequestBody UserEntity user) {
 		return  ResponseEntity.status(HttpStatus.OK).body("User logged in successfully");
 
 	}

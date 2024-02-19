@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.dto.UserDTO;
 import com.effigo.learningportal.mapper.UserPopulator;
-import com.effigo.learningportal.model.User;
+import com.effigo.learningportal.model.UserEntity;
 import com.effigo.learningportal.repository.UserRepository;
 import com.effigo.learningportal.service.AdminService;
 
@@ -18,10 +18,10 @@ public class AdminServiceImpl implements AdminService {
 	private UserRepository userRepository;
 
 	@Override
-	public User createUser(UserDTO userDTO) {
-		User user = UserPopulator.INSTANCE.populateUser(userDTO);
-//		user.setCreatedAt(new Date());
-//		user.setUpdatedAt(new Date());
+	public UserEntity createUser(UserDTO userDTO) {
+		UserEntity user = UserPopulator.INSTANCE.populateUser(userDTO);
+		user.setCreatedAt(new Date());
+		user.setUpdatedAt(new Date());
 		return userRepository.save(user);
 	}
 
