@@ -1,7 +1,11 @@
 package com.effigo.learningportal.model;
 
 import java.sql.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,16 +33,20 @@ public class CourseEntity{
 	@Column(nullable = true)
 	private String name;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "course_category_id")
-	private Long courseCategory;
+	private CourseCategoryEntity courseCategory;
 
 	@OneToMany(mappedBy = "course")
 	private Set<EnrollmentEntity> enrollments;
 
 	@ManyToOne
     @JoinColumn(name = "publisher_id")
-    private Long publisher;
+    private UserEntity publisher;
+	
+	@OneToMany(mappedBy = "course")
+    private List<FavouritesEntity> favourites;
 
 
 	@Column(name = "created_at")
@@ -49,4 +57,18 @@ public class CourseEntity{
 
 	@Column(nullable = false)
 	private boolean status;
+
+//	public void setName(String name) {
+//		this.name = name;
+//		
+//	}
+
+	
 }
+
+
+
+
+
+
+

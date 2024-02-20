@@ -21,8 +21,8 @@ public class UserDTO {
 	private BigInteger phoneNumber;
 
 	private boolean status;
-
-	private Date createdAt;
-
-	private Date updatedAt;
+//
+//	private Date createdAt;
+//
+//	private Date updatedAt;
 }

@@ -1,6 +1,6 @@
 package com.effigo.learningportal.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -38,5 +38,6 @@ public class RolesEntity {
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
+
 
 }
