@@ -12,7 +12,7 @@ import com.effigo.learningportal.model.UserEntity;
 public class loginController {
 
 	@PostMapping("/login")
-	public ResponseEntity<?> userLogin(@RequestBody UserEntity user) {
+	public ResponseEntity<String> userLogin(@RequestBody UserEntity user) {
 		return  ResponseEntity.status(HttpStatus.OK).body("User logged in successfully");
 
 	}

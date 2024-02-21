@@ -1,6 +1,8 @@
 package com.effigo.learningportal.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import com.effigo.learningportal.dto.CourseDTO;
@@ -10,11 +12,14 @@ import com.effigo.learningportal.model.CourseEntity;
 public interface CoursePopulator {
 	CoursePopulator INSTANCE = Mappers.getMapper(CoursePopulator.class);
 
-//	    @Mapping(target = "courseCategoryId", source = "courseCategory courseCategoryId.id")
-//	    @Mapping(target = "publisherId", source = "userEntity.id")
-	    CourseDTO CourseEntityToDto(CourseEntity courseEntity);
+	@Mappings({ @Mapping(source = "courseCategory.id", target = "courseCategoryId"),
+			@Mapping(source = "publisher.id", target = "publisherId") })
+	CourseDTO CourseEntityToDto(CourseEntity courseEntity);
 
-	    CourseEntity CourseDtoToEntity(CourseDTO dto);
+	@Mappings({ @Mapping(source = "courseCategoryId", target = "courseCategory.id"),
+			@Mapping(source = "publisherId", target = "publisher.id"),
+			@Mapping(source = "enrollments", target = "enrollments", ignore = true),
+			@Mapping(source = "favourites", target = "favourites") })
+	CourseEntity CourseDtoToEntity(CourseDTO dto);
 
 }
-

@@ -15,7 +15,7 @@ public interface AdminService {
 
 	public void deleteUsers();
 
-	public void deleteUserById(Long uid);
+	public boolean deleteUserById(Long uid);
 
 	public String adminHome();
 

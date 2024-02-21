@@ -7,10 +7,12 @@ package com.effigo.learningportal.exception;
  * 
  */
 
-public class AccessDeniedException {
+public class AccessDeniedException extends RuntimeException {
 
-	public AccessDeniedException() {
-   // document why this constructor is empty
+	private static final long serialVersionUID = 1L;
+
+	public AccessDeniedException(String message) {
+		super(message);
  }
 
 }

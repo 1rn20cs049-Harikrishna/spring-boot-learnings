@@ -1,10 +1,10 @@
 package com.effigo.learningportal.exception;
 
-public class CourseNotFoundException extends RuntimeException {
+public class CourseCategoryNotFound extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public CourseNotFoundException(String message) {
+	public CourseCategoryNotFound(String message) {
 		super(message);
 	}
 

@@ -5,11 +5,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,21 +33,17 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-
-//	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-//	@JoinColumn(name = "role_id")
-//	@OnDelete(action = OnDeleteAction.CASCADE)
-//	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "role_id")
 	private RolesEntity role;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 	private Set<EnrollmentEntity> enrollments;
 
 	@OneToMany(mappedBy = "publisher")
 	private Set<CourseEntity> publishedCourses;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 	private List<FavouritesEntity> favourites;
 
 	@Column()
@@ -60,16 +55,18 @@ public class UserEntity {
 	@Column(name = "phone_number")
 	private BigInteger phoneNumber;
 
-	@Column()
-	private boolean status = true;
+	@Column
+	private Boolean status = true;
 
 	@Column()
 	private String password;
 
 	@Column(name = "created_at")
+	@CreationTimestamp
 	private Date createdAt;
 
 	@Column(name = "updated_at")
+	@UpdateTimestamp
 	private Date updatedAt;
 
 }

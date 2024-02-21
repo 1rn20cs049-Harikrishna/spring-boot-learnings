@@ -3,6 +3,10 @@ package com.effigo.learningportal.model;
 import java.util.Date;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +28,7 @@ public class RolesEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany(mappedBy = "role")
+	@OneToMany(mappedBy = "role",cascade = CascadeType.ALL)
 	private Set<UserEntity> users;
 
 	@Column
@@ -34,9 +38,11 @@ public class RolesEntity {
 	private boolean status = true;
 
 	@Column(name = "created_at")
+	@CreationTimestamp
 	private Date createdAt;
 
 	@Column(name = "updated_at")
+	@UpdateTimestamp
 	private Date updatedAt;
 
 

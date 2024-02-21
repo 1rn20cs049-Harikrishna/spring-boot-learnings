@@ -1,7 +1,12 @@
 package com.effigo.learningportal.model;
 
+import java.sql.Date;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,18 +24,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CourseCategoryEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column
+	private String name;
 
-    @Column(nullable = false)
-    private boolean status;
-    
-    @OneToMany(mappedBy = "courseCategory")
-    private Set<CourseEntity> courses;
-    
-  
+	@Column
+	private boolean status;
+
+	@OneToMany(mappedBy = "courseCategory", cascade = CascadeType.ALL)
+	private Set<CourseEntity> courses;
+
+	@Column(name = "created_at")
+	@CreationTimestamp
+	private Date createdAt;
+
+	@Column(name = "updated_at")
+	@UpdateTimestamp
+	private Date updatedAt;
+
 }
