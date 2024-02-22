@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.dto.UserDTO;
@@ -15,98 +17,155 @@ import com.effigo.learningportal.repository.UserRepository;
 import com.effigo.learningportal.service.AdminService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
-//@Slf4j
+@Slf4j
 public class AdminServiceImpl implements AdminService {
 
 	private UserRepository userRepository;
 	private RolesRepository rolesRepository;
 
 	@Override
-	public UserDTO createUser(UserDTO userDTO) {
+	public ResponseEntity<?> createUser(UserDTO userDTO, Long adminId) {
 		try {
-			UserEntity userEntity = UserMapper.INSTANCE.toEntity(userDTO);
-			Optional<RolesEntity> learnerRoleOptional = rolesRepository.findById((long) 3);
-			if (learnerRoleOptional.isPresent()) {
-				userEntity.setRole(learnerRoleOptional.get());
-			} else {
+			Optional<UserEntity> userEntityCheck = userRepository.findById(adminId);
 
+			if (userEntityCheck.isPresent()) {
+				UserEntity isUserAdmin = userEntityCheck.get();
 				/*
-				 * generally it is not needed , roles already defined in rolesentity to increase
-				 * reliability if in case by miss admin delete the roles automatically can bean
-				 * created here
+				 * Optional<RolesEntity> adminRoleOptional = rolesRepository.findById((long) 1);
+				 * 
+				 * if(!adminRoleOptional.isPresent()) {
+				 * ResponseEntity.status(HttpStatus.BAD_REQUEST).
+				 * body("Don't know whether user is normal user or admin"); } RolesEntity
+				 * rolesEntity = adminRoleOptional.orElse(null);
 				 */
 
-				RolesEntity rolesEntity = new RolesEntity();
-				rolesEntity.setId((long) 3);
-				rolesEntity.setName("LEARNER");
-				rolesRepository.save(rolesEntity);
+				if (isUserAdmin.getRole() != null && isUserAdmin.getRole().getId().equals((long) 1)) {
 
-				userEntity.setRole(rolesEntity);
+					UserEntity userEntity = UserMapper.INSTANCE.toEntity(userDTO);
+					Optional<RolesEntity> learnerRoleOptional = rolesRepository.findById((long) 3);
+					if (learnerRoleOptional.isPresent()) {
+						userEntity.setRole(learnerRoleOptional.get());
+					} else {
 
+						/*
+						 * generally it is not needed , roles already defined in rolesentity to increase
+						 * reliability if in case by miss admin delete the roles automatically can bean
+						 * created here
+						 */
+
+						RolesEntity rolesEntity1 = new RolesEntity();
+						rolesEntity1.setId((long) 3);
+						rolesEntity1.setName("LEARNER");
+						rolesRepository.save(rolesEntity1);
+
+						userEntity.setRole(rolesEntity1);
+
+					}
+
+					return ResponseEntity.status(HttpStatus.CREATED)
+							.body(UserMapper.INSTANCE.toDto(userRepository.save(userEntity)));
+				}
+
+				else {
+					return ResponseEntity.status(HttpStatus.FORBIDDEN)
+							.body("User is not an admin,user is not authorised to create to another user");
+				}
 			}
 
-			return UserMapper.INSTANCE.toDto(userRepository.save(userEntity));
-		} catch (Exception e) {
-			e.printStackTrace();
+			else {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN)
+						.body("User is not an admin,user is not authorised to create to another user");
+			}
+		} catch (
+
+		Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-		return null;
+
 	}
 
 	@Override
-	public UserDTO searchUserDetails(Long uid) {
+	public ResponseEntity<?> searchUserDetails(Long uid) {
 
-		Optional<UserEntity> userOptional = userRepository.findById(uid);
-		UserEntity userEntity = userOptional.orElse(null);
+		try {
+			Optional<UserEntity> userOptional = userRepository.findById(uid);
+			UserEntity userEntity = userOptional.orElse(null);
 
-		if (userOptional.isPresent()) {
-			return UserMapper.INSTANCE.toDto(userEntity);
+			if (userOptional.isPresent()) {
+				return ResponseEntity.status(HttpStatus.OK).body(UserMapper.INSTANCE.toDto(userEntity));
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such User found");
+			}
+
+		} catch (Exception e) {
+			log.info("AdminServiceImpl::searchUserDetails " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-		return null;
+
 	}
 
 	@Override
 	public String adminHome() {
 
-		return null;
+		return "all okay!! This is admin home page";
 	}
 
 	@Override
 	public List<UserDTO> getUsers() {
 
-		List<UserEntity> users = userRepository.findAll();
-		return users.stream().map(UserMapper.INSTANCE::toDto).collect(Collectors.toList());
-	}
-
-	@Override
-	public void deleteUsers() {
-
 		try {
-			userRepository.deleteAll();
+			List<UserEntity> users = userRepository.findAll();
+			return users.stream().map(UserMapper.INSTANCE::toDto).collect(Collectors.toList());
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			log.info("AdminServiceImpl::getUsers " + e.getMessage());
+			throw new RuntimeException("Something went wrong " + e.getMessage());
 
+		}
 	}
 
+	/*
+	 * @Override public void deleteUsers() {
+	 * 
+	 * try { userRepository.deleteAll(); } catch (Exception e) {
+	 * e.printStackTrace(); } }
+	 */
+	
+
 	@Override
-	public boolean deleteUserById(Long uid) {
-		// Check if the user with the given ID exists
-		Optional<UserEntity> userOptional = userRepository.findById(uid);
+	public ResponseEntity<?> deleteUserById(Long adminId, Long userId) {
+		/* Check if the user and admin with the given IDs exists */
+		try {
 
-		if (userOptional.isPresent()) {
-			// User found, delete it
-			UserEntity user = userOptional.get();
-			userRepository.delete(user);
+			Optional<UserEntity> userOptional = userRepository.findById(userId);
+			Optional<UserEntity> adminOptional = userRepository.findById(adminId);
 
-			// Return true to indicate successful deletion
-			return true;
-		} else {
-			// User not found, return false
-			return false;
+			if (userOptional.isPresent() && adminOptional.isPresent()) {
+
+				Optional<RolesEntity> adminRoleOptional = rolesRepository.findById((long) 1);
+
+				if (!adminRoleOptional.isPresent()) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User or admin is not present");
+				} else {
+					if (!adminOptional.get().getRole().getId().equals(adminRoleOptional.get().getId())) {
+						return ResponseEntity.status(HttpStatus.FORBIDDEN).body("provide proper admin id");
+					}
+					userRepository.deleteById(userId);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT)
+							.body("User with following details are deleted " + userOptional.get());
+				}
+
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No such user found");
+			}
+		} catch (Exception e) {
+			log.info("AdminServiceImpl::deleteUserById " + e.getMessage());
+			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
+
 	}
 
 }

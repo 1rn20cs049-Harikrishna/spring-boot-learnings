@@ -1,5 +1,6 @@
 package com.effigo.learningportal.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,32 +67,31 @@ public class AuthorServiceImpl implements AuthorService {
 		if (existingCourseOptional.isPresent()) {
 			CourseEntity existingCourse = existingCourseOptional.get();
 
-			// Check if the authorId matches the publisherId of the course
+			/* Check if the authorId matches the publisherId of the course */
 			if (existingCourse.getPublisher().getId().equals(authorId)) {
-				// Update the properties of the existing course with the new values from the DTO
-				existingCourse.setName(courseDto.getName());
-				// Update other properties as needed
+				if (courseDto.getName() != null) {
+					existingCourse.setName(courseDto.getName());
+				}
 
-				// Save the updated course
 				CourseEntity updatedCourse = courseRepository.save(existingCourse);
-
-				// Convert the updated course back to DTO and return
 				return CoursePopulator.INSTANCE.CourseEntityToDto(updatedCourse);
 			} else {
-				// User is not authorized to modify this course
-				// You can throw an exception, return a specific response, or handle it based on
-				// your requirements
+				/*
+				 * User is not authorized to modify this course You can throw an exception,
+				 * return a specific response, or handle it based on your requirements
+				 */
 				throw new AccessDeniedException("User is not authorized to edit this course");
 			}
 		} else {
-			// Course with the specified ID not found
-			// You can throw an exception, return a specific response, or handle it based on
-			// your requirements
+			/*
+			 * Course with the specified ID not found You can throw an exception, return a
+			 * specific response, or handle it based on your requirements
+			 */
 			throw new EntityNotFoundException("Course with ID " + courseDto.getId() + " not found");
 		}
 	}
 
-	public void deleteCourse(Long courseId, Optional<Long> authorId) {
+	public void deleteCourse(Long courseId, Long authorId) {
 
 		// Check if the course with the specified ID exists
 		Optional<CourseEntity> courseOptional = courseRepository.findById(courseId);
@@ -99,10 +99,12 @@ public class AuthorServiceImpl implements AuthorService {
 		if (courseOptional.isPresent()) {
 			CourseEntity courseToDelete = courseOptional.get();
 
-			// Check if the authorId is provided and matches the publisherId of the course
-			if (authorId.isPresent() && courseToDelete.getPublisher().getId().equals(authorId.get())) {
-				// Authorized user, proceed with deletion
+			/*
+			 * Check if the authorId is provided and matches the publisherId of the course
+			 */
+			if (courseToDelete.getPublisher().getId().equals(authorId)) {
 				courseRepository.delete(courseToDelete);
+				
 			} else {
 				/*
 				 * User is not authorized to delete this course You can throw an exception,
@@ -120,52 +122,15 @@ public class AuthorServiceImpl implements AuthorService {
 
 	}
 
-	public List<CourseDTO> getCourses(Optional<Long> authorId) {
+	public List<CourseDTO> getCourses(Long authorId) {
 
-		List<CourseEntity> courses;
-
-		// Check if the authorId is present
-		if (authorId.isPresent()) {
-			// Retrieve courses for a specific author (publisher)
-			courses = courseRepository.findAllByPublisherId(authorId.get());
-		} else {
-			// Retrieve all courses
-			courses = courseRepository.findAll();
-		}
-
-		// Convert the list of CourseEntity to a list of CourseDTO
-		return courses.stream().map(CoursePopulator.INSTANCE::CourseEntityToDto).collect(Collectors.toList());
-	}
-
-	@Override
-	public CourseEntity editCourse(CourseEntity updatedCourse) {
-		// Step 1: Retrieve the existing course from the database
 		try {
-			Optional<CourseEntity> existingCourseOptional = courseRepository.findById(updatedCourse.getId());
+			List<CourseEntity> courses = courseRepository.findAllByPublisherId(authorId);
 
-			if (existingCourseOptional.isPresent()) {
-				CourseEntity existingCourse = existingCourseOptional.get();
-
-				// Step 2: Verify that the course exists
-				// (This check might not be necessary if the course should always exist)
-
-				// Step 3: Perform the necessary updates
-				// For example, update properties like name, status, etc.
-				existingCourse.setName(updatedCourse.getName());
-				existingCourse.setStatus(updatedCourse.isStatus());
-
-				// Step 4: Save the updated course back to the database
-				return courseRepository.save(existingCourse);
-
-			} else {
-				// Handle the case where the course doesn't exist
-				throw new CourseNotFoundException("Course not found with ID: " + updatedCourse.getId());
-			}
+			return courses.stream().map(CoursePopulator.INSTANCE::CourseEntityToDto).collect(Collectors.toList());
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			return Collections.emptyList();
 		}
-
 	}
-
 }

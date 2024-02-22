@@ -1,6 +1,5 @@
 package com.effigo.learningportal.controller.author;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.effigo.learningportal.dto.CourseDTO;
-import com.effigo.learningportal.model.CourseEntity;
 import com.effigo.learningportal.service.impl.AuthorServiceImpl;
 
 import lombok.AllArgsConstructor;
@@ -31,41 +29,70 @@ public class AuthorController {
 	private AuthorServiceImpl authorServiceImpl;
 
 	@PostMapping("/{author_id}/create-course")
-	public ResponseEntity<CourseDTO> createCourse(@RequestBody CourseDTO courseDto,
+	public ResponseEntity<?> createCourse(@RequestBody Optional<CourseDTO> courseDto,
 			@PathVariable("author_id") Long authorId) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(authorServiceImpl.createCourse(courseDto, authorId));
+			if (courseDto.isPresent()) {
+
+				return ResponseEntity.status(HttpStatus.CREATED)
+						.body(authorServiceImpl.createCourse(courseDto.get(), authorId));
+
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provide the request body");
+			}
 
 		} catch (Exception e) {
 			log.info("AuthorController::createCourse There something wrong in controller : " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+	}
+
+	@PutMapping("/{authorId}/edit-course")
+	public ResponseEntity<?> editCourse(@RequestBody Optional<CourseDTO> courseDTO, @PathVariable Long authorId) {
+		log.info("AuthorController::editCourse Controller started");
+		try {
+
+			if (courseDTO.isPresent()) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED)
+						.body(authorServiceImpl.editCourse(courseDTO.get(), authorId));
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provide the request body");
+			}
+		} catch (Exception e) {
+			log.info("AuthorController::editCourse " + e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@PutMapping("/edit-course")
-	public ResponseEntity<CourseEntity> editCourse(@RequestBody CourseEntity course) {
-//		log.info("AuthorController::editCourse Controller started");
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(authorServiceImpl.editCourse(course));
-	}
-
 	@DeleteMapping("/course/{courseId}")
-	public ResponseEntity<?> deleteCourse(@PathVariable Long courseId,
-			@RequestParam("userId") Optional<Long> authorId) {
-		log.info("AuthorController::deleteCourse Controller started");
-		authorServiceImpl.deleteCourse(courseId, authorId);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deletion successfull");
+	public ResponseEntity<String> deleteCourse(@PathVariable Long courseId,
+			@RequestParam("authorId") Optional<Long> authorId) {
+		try {
+			if (authorId.isPresent()) {
+				log.info("AuthorController::deleteCourse Controller started");
+				authorServiceImpl.deleteCourse(courseId, authorId.get());
+				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deletion successfull");
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provide authorId");
+			}
+
+		} catch (Exception e) {
+			log.info("AuthorController::deleteCourse  " + e.getMessage());
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+
+		}
 	}
 
-	@GetMapping("/courses")
-	public ResponseEntity<List<CourseDTO>> getCourses(@RequestParam("userId") Optional<Long> authorId) {
+	@GetMapping("/{authorId}/courses")
+	public ResponseEntity<?> getCourses(@PathVariable("authorId") Long authorId) {
 		try {
 			log.info("AuthorController::getCourses Controller started");
 
 			return ResponseEntity.status(HttpStatus.OK).body(authorServiceImpl.getCourses(authorId));
 		} catch (Exception e) {
 			log.info("AuthorController::getCourses " + e.getMessage());
-			e.printStackTrace();
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 

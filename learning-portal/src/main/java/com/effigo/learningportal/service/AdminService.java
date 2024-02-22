@@ -1,22 +1,23 @@
 package com.effigo.learningportal.service;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 
 import com.effigo.learningportal.dto.UserDTO;
-import com.effigo.learningportal.model.UserEntity;
 
 public interface AdminService {
-	public UserDTO createUser(UserDTO userDTO);
 
-	public UserDTO searchUserDetails(Long uid);
+	public ResponseEntity<?> searchUserDetails(Long uid);
 
 	public List<UserDTO> getUsers();
 
-	public void deleteUsers();
-
-	public boolean deleteUserById(Long uid);
+	/* public void deleteUsers(); */
 
 	public String adminHome();
+
+	public ResponseEntity<?> createUser(UserDTO userDTO, Long adminId);
+
+	public ResponseEntity<?> deleteUserById(Long aid, Long uid);
 
 }

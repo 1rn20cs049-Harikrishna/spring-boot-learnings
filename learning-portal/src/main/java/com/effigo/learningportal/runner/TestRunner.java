@@ -1,14 +1,10 @@
 package com.effigo.learningportal.runner;
 
-import java.util.Date;
+import java.math.BigInteger;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.effigo.learningportal.model.CourseCategoryEntity;
-import com.effigo.learningportal.model.CourseEntity;
-import com.effigo.learningportal.model.EnrollmentEntity;
-import com.effigo.learningportal.model.FavouritesEntity;
 import com.effigo.learningportal.model.RolesEntity;
 import com.effigo.learningportal.model.UserEntity;
 import com.effigo.learningportal.repository.CourseCategoryRepository;
@@ -40,23 +36,37 @@ public class TestRunner implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		
+
 //		 boolean v =  enrollmentRepository.existsByUserAndCourse((long) 56,(long) 13);
 //		 log.info("Value of v " + v);
-		 
 
 //		UserEntity userEntity = new UserEntity();
 //		userEntity.setName("hari");
 //		userEntity.setEmail("harikrishna92364@gmail.com");
-//		userEntity.setPassword("123456");
-//		userEntity.setPhoneNumber(75843);
-
+//		userEntity.setPassword("123456456");
+//		
+//		userEntity.setPhoneNumber(new BigInteger("364564564"));
+//		
+//		RolesEntity rolesEntity = rolesRepository.findById((long)1).orElse(null);
+//		if(rolesEntity != null)
+//		{
+//			userEntity.setRole(rolesEntity);
+//		}
 //		userRepository.save(userEntity);
+		
+		
+
+//		
+
+//
 //
 //		RolesEntity rolesEntity = new RolesEntity();
-//		rolesEntity.setId((long) 1);
+//		rolesEntity.setId((long) 11);
+//		rolesEntity.setStatus(true);
 //		rolesEntity.setName("ADMIN");
+//		rolesRepository.save(rolesEntity);
+
+
 //
 //		rolesEntity.se
 //

@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "role_id")
 	private RolesEntity role;
 
@@ -56,7 +57,7 @@ public class UserEntity {
 	private BigInteger phoneNumber;
 
 	@Column
-	private Boolean status = true;
+	private Boolean status;
 
 	@Column()
 	private String password;
@@ -68,5 +69,10 @@ public class UserEntity {
 	@Column(name = "updated_at")
 	@UpdateTimestamp
 	private Date updatedAt;
+	
+	@PrePersist
+	public void setStatus(){
+		this.status = true;
+	}
 
 }

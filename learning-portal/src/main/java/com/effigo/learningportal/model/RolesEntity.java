@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +36,7 @@ public class RolesEntity {
 	private String name;
 
 	@Column
-	private boolean status = true;
+	private boolean status;
 
 	@Column(name = "created_at")
 	@CreationTimestamp
@@ -44,6 +45,11 @@ public class RolesEntity {
 	@Column(name = "updated_at")
 	@UpdateTimestamp
 	private Date updatedAt;
+	
+	@PrePersist
+	public void setStatus(){
+		this.status = true;
+	}
 
 
 }
