@@ -18,7 +18,7 @@ public interface CoursePopulator {
 
 	@Mappings({ @Mapping(source = "courseCategoryId", target = "courseCategory.id"),
 			@Mapping(source = "publisherId", target = "publisher.id"),
-			@Mapping(source = "enrollments", target = "enrollments", ignore = true),
+			@Mapping(source = "enrollments", target = "enrollments"),
 			@Mapping(source = "favourites", target = "favourites") })
 	CourseEntity CourseDtoToEntity(CourseDTO dto);
 

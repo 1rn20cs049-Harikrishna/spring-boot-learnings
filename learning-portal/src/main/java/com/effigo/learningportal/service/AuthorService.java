@@ -2,10 +2,12 @@ package com.effigo.learningportal.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.effigo.learningportal.dto.CourseDTO;
 
 public interface AuthorService {
-	public CourseDTO createCourse(CourseDTO courseDto, Long authorId);
+	public ResponseEntity<?>  createCourse(CourseDTO courseDto, Long authorId);
 
 	public void deleteCourse(Long courseId, Long authorId);
 

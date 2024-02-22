@@ -1,6 +1,6 @@
 package com.effigo.learningportal.service.impl;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,7 +171,12 @@ public class LearnerServiceImpl implements LearnerService {
 
 			Optional<UserEntity> userEntity = userRepository.findById(uid);
 			if (userEntity.isPresent()) {
-				return new ResponseEntity<>(userEntity.get().getFavourites(), HttpStatus.OK);
+				List<FavouritesEntity> favouritesEntities = userEntity.get().getFavourites();
+				List<CourseEntity> idsList = new ArrayList<>();
+				for (FavouritesEntity favouritesEntity : favouritesEntities) {
+					idsList.add(favouritesEntity.getCourse());
+				}
+				return new ResponseEntity<>(idsList, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("No such user present", HttpStatus.NOT_FOUND);
 			}
@@ -182,11 +187,5 @@ public class LearnerServiceImpl implements LearnerService {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-//
-//	@Override
-//	public List<CourseDTO> searchCourseByAuthor(Long author) {
-//
-//		return Collections.emptyList();
-//	}
 
 }

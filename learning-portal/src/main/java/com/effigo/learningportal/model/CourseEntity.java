@@ -7,6 +7,10 @@ import java.util.Set;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +31,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class CourseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,13 +44,15 @@ public class CourseEntity {
 	@JoinColumn(name = "course_category_id")
 	private CourseCategoryEntity courseCategory;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "course",cascade = CascadeType.ALL)
 	private Set<EnrollmentEntity> enrollments;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "publisher_id")
 	private UserEntity publisher;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	private List<FavouritesEntity> favourites;
 

@@ -34,8 +34,7 @@ public class AuthorController {
 		try {
 			if (courseDto.isPresent()) {
 
-				return ResponseEntity.status(HttpStatus.CREATED)
-						.body(authorServiceImpl.createCourse(courseDto.get(), authorId));
+				return authorServiceImpl.createCourse(courseDto.get(), authorId);
 
 			} else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provide the request body");

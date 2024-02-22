@@ -133,7 +133,6 @@ public class AdminServiceImpl implements AdminService {
 	 * try { userRepository.deleteAll(); } catch (Exception e) {
 	 * e.printStackTrace(); } }
 	 */
-	
 
 	@Override
 	public ResponseEntity<?> deleteUserById(Long adminId, Long userId) {
@@ -152,10 +151,13 @@ public class AdminServiceImpl implements AdminService {
 				} else {
 					if (!adminOptional.get().getRole().getId().equals(adminRoleOptional.get().getId())) {
 						return ResponseEntity.status(HttpStatus.FORBIDDEN).body("provide proper admin id");
+					} else {
+						userRepository.deleteById(userId);
+						return ResponseEntity.status(HttpStatus.NO_CONTENT)
+								.body("User with following id are deleted " + userOptional.get().getId());
+
 					}
-					userRepository.deleteById(userId);
-					return ResponseEntity.status(HttpStatus.NO_CONTENT)
-							.body("User with following details are deleted " + userOptional.get());
+
 				}
 
 			} else {
@@ -163,7 +165,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 		} catch (Exception e) {
 			log.info("AdminServiceImpl::deleteUserById " + e.getMessage());
-			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 
 	}

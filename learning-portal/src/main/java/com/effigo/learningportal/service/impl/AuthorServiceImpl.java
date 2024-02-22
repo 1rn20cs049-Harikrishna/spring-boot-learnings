@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.dto.CourseDTO;
@@ -33,30 +35,37 @@ public class AuthorServiceImpl implements AuthorService {
 	private CourseCategoryRepository courseCategoryRepository;
 
 	@Override
-	public CourseDTO createCourse(CourseDTO courseDto, Long authorId) {
+	public ResponseEntity<?> createCourse(CourseDTO courseDto, Long authorId) {
 
 		try {
-			// checking user exists are not
+			/* checking user exists are not */
 			Optional<UserEntity> userEntityOptional = userRepository.findById(authorId);
 
 			CourseEntity course = CoursePopulator.INSTANCE.CourseDtoToEntity(courseDto);
 
-			// checking for user mentioned category exists are not
+			/* checking for user mentioned category exists are not */
 			Optional<CourseCategoryEntity> courseCategoryEntityOptional = courseCategoryRepository
 					.findById(courseDto.getCourseCategoryId());
 
 			// if both user and courseCategory proper then proceed to create course
 			if (userEntityOptional.isPresent() && courseCategoryEntityOptional.isPresent()) {
 				UserEntity userEntity = userEntityOptional.get();
-				course.setPublisher(userEntity);
-				CourseCategoryEntity courseCategoryEntity = courseCategoryEntityOptional.get();
-				course.setCourseCategory(courseCategoryEntity);
+				if (userEntity.getRole().getId() == 2) {
+					course.setPublisher(userEntity);
+					CourseCategoryEntity courseCategoryEntity = courseCategoryEntityOptional.get();
+					course.setCourseCategory(courseCategoryEntity);
+					return ResponseEntity.status(HttpStatus.CREATED)
+							.body(CoursePopulator.INSTANCE.CourseEntityToDto(courseRepository.save(course)));
+				}
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not an author to create the course");
+
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provide the valid author id");
 			}
 
-			return CoursePopulator.INSTANCE.CourseEntityToDto(courseRepository.save(course));
 		} catch (Exception e) {
-
-			throw new RuntimeException(e.getMessage());
+			log.info("AuthorServiceImpl:: createCourse " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
 
@@ -104,7 +113,7 @@ public class AuthorServiceImpl implements AuthorService {
 			 */
 			if (courseToDelete.getPublisher().getId().equals(authorId)) {
 				courseRepository.delete(courseToDelete);
-				
+
 			} else {
 				/*
 				 * User is not authorized to delete this course You can throw an exception,
