@@ -1,26 +1,23 @@
 package com.effigo.learningportal.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 
-import com.effigo.learningportal.model.CourseEntity;
-import com.effigo.learningportal.model.UserEntity;
+import com.effigo.learningportal.dto.CourseDTO;
 
 public interface LearnerService {
 
-	public List<CourseEntity> searchCourseById(Long id);
+	public ResponseEntity<?> searchCourseById(Long courseId);
 
-	public List<CourseEntity> searchCourseByAuthor(Long author);
+//	public List<CourseDTO> searchCourseByAuthor(Long author);
 
-	public List<CourseEntity> searchCourseByCategory(Long id);
+	public ResponseEntity<?> searchCourseByCategory(Long categoryId);
 
-	public ResponseEntity<String>  addFavourite(Long uid, Long cid);
+	public ResponseEntity<String> addFavourite(Long uid, Long cid);
 
 	public ResponseEntity<String> enrollCourse(Long userId, Long courseId);
 
-	public ResponseEntity<List<CourseEntity>> getAllFavouriteByUserId(Long uid);
+	public ResponseEntity<?> getAllFavouriteByUserId(Long uid);
 
 }

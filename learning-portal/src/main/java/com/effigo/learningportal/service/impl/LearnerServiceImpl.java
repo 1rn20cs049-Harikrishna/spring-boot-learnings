@@ -3,12 +3,14 @@ package com.effigo.learningportal.service.impl;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.exception.EnrollCourseException;
+import com.effigo.learningportal.mapper.CoursePopulator;
 import com.effigo.learningportal.model.CourseCategoryEntity;
 import com.effigo.learningportal.model.CourseEntity;
 import com.effigo.learningportal.model.EnrollmentEntity;
@@ -39,25 +41,36 @@ public class LearnerServiceImpl implements LearnerService {
 	private CourseCategoryRepository courseCategoryRepository;
 
 	@Override
-	public List<CourseEntity> searchCourseById(Long courseId) {
+	public ResponseEntity<?> searchCourseById(Long courseId) {
 
-		return courseRepository.findAllCourseById(courseId);
+		try {
+			List<CourseEntity> courseEntities = courseRepository.findAllCourseById(courseId);
+			if (courseEntities.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("No courses exists with the provided course id");
+			}
+
+			return ResponseEntity.status(HttpStatus.OK).body(courseEntities.stream()
+					.map(CoursePopulator.INSTANCE::CourseEntityToDto).collect(Collectors.toList()));
+		} catch (Exception e) {
+			log.info("LearnerServiceImpl:: searchCourseById  " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
 
 	}
 
-
 	@Override
-	public List<CourseEntity> searchCourseByCategory(Long categoryId) {
+	public ResponseEntity<?> searchCourseByCategory(Long categoryId) {
 		// Check if the category with the given ID exists
 		Optional<CourseCategoryEntity> categoryOptional = courseCategoryRepository.findById(categoryId);
 
 		if (categoryOptional.isPresent()) {
 			// Category found, retrieve courses in that category
 			CourseCategoryEntity category = categoryOptional.get();
-			return courseRepository.findByCourseCategory(category);
+
+			return ResponseEntity.status(HttpStatus.OK).body(category.getCourses());
 		} else {
-			// Category not found, return an empty list or handle accordingly
-			return Collections.emptyList();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("provide proper course category id");
 		}
 	}
 
@@ -75,7 +88,7 @@ public class LearnerServiceImpl implements LearnerService {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 			}
 
-			// Check if the course is present
+			/* Check if the course is present */
 			Optional<CourseEntity> courseOptional = courseRepository.findById(cid);
 			if (courseOptional.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found");
@@ -88,7 +101,7 @@ public class LearnerServiceImpl implements LearnerService {
 
 			}
 
-			// If all checks pass, add the course to favorites for the user
+			/* If all checks pass, add the course to favorites for the user */
 			UserEntity user = userOptional.get();
 			CourseEntity course = courseOptional.get();
 
@@ -101,9 +114,9 @@ public class LearnerServiceImpl implements LearnerService {
 			return ResponseEntity.status(HttpStatus.OK).body("Course added to favorites successfully");
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			log.info("LearnerServiceImpl:: addFavourite  " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
-		return null;
 
 	}
 
@@ -116,22 +129,22 @@ public class LearnerServiceImpl implements LearnerService {
 			if (userOptional.isPresent()) {
 				UserEntity user = userOptional.get();
 
-				// Check if the course with the given cid exists
+				/* Check if the course with the given courseId exists */
 				Optional<CourseEntity> courseOptional = courseRepository.findById(courseId);
 
 				if (courseOptional.isPresent()) {
 					CourseEntity course = courseOptional.get();
 
-					// Check if the user is already enrolled in the course
+					/* Check if the user is already enrolled in the course */
 					boolean isEnrolled = enrollmentRepository.existsByUserAndCourse(user.getId(), course.getId());
 
 					if (!isEnrolled) {
-						// User is not enrolled, create a new enrollment
+						/* User is not enrolled, create a new enrollment */
 						EnrollmentEntity enrollment = new EnrollmentEntity();
 						enrollment.setUser(user);
 						enrollment.setCourse(course);
 
-						// Save the enrollment to the database
+						/* Save the enrollment to the database */
 						enrollmentRepository.save(enrollment);
 						return ResponseEntity.status(HttpStatus.CREATED).body("Enrollment successful!");
 					} else {
@@ -148,18 +161,19 @@ public class LearnerServiceImpl implements LearnerService {
 			}
 		} catch (Exception e) {
 
-			throw new EnrollCourseException("LearnerServiceImpl::enrollCourse something went wrong");
+			throw new EnrollCourseException("LearnerServiceImpl::enrollCourse something went wrong" + e.getMessage());
 		}
 	}
 
 	@Override
-	public ResponseEntity<List<CourseEntity>> getAllFavouriteByUserId(Long uid) {
+	public ResponseEntity<?> getAllFavouriteByUserId(Long uid) {
 		try {
-			if (userRepository.existsById(uid)) {
-				List<CourseEntity> favoriteCourses = favouritesRepository.findAllByUserId(uid);
-				return new ResponseEntity<>(favoriteCourses, HttpStatus.OK);
+
+			Optional<UserEntity> userEntity = userRepository.findById(uid);
+			if (userEntity.isPresent()) {
+				return new ResponseEntity<>(userEntity.get().getFavourites(), HttpStatus.OK);
 			} else {
-				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>("No such user present", HttpStatus.NOT_FOUND);
 			}
 
 		} catch (Exception e) {
@@ -168,11 +182,11 @@ public class LearnerServiceImpl implements LearnerService {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	@Override
-	public List<CourseEntity> searchCourseByAuthor(Long author) {
-
-		return Collections.emptyList();
-	}
+//
+//	@Override
+//	public List<CourseDTO> searchCourseByAuthor(Long author) {
+//
+//		return Collections.emptyList();
+//	}
 
 }

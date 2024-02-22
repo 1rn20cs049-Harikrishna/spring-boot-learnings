@@ -8,6 +8,8 @@ import java.util.Set;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,13 +40,13 @@ public class UserEntity {
 	@JoinColumn(name = "role_id")
 	private RolesEntity role;
 
-	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<EnrollmentEntity> enrollments;
 
-	@OneToMany(mappedBy = "publisher")
+	@OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
 	private Set<CourseEntity> publishedCourses;
 
-	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<FavouritesEntity> favourites;
 
 	@Column()
@@ -69,9 +71,9 @@ public class UserEntity {
 	@Column(name = "updated_at")
 	@UpdateTimestamp
 	private Date updatedAt;
-	
+
 	@PrePersist
-	public void setStatus(){
+	public void setStatus() {
 		this.status = true;
 	}
 

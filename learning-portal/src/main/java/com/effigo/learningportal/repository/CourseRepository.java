@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.effigo.learningportal.dto.CourseDTO;
 import com.effigo.learningportal.model.CourseCategoryEntity;
 import com.effigo.learningportal.model.CourseEntity;
 
@@ -21,7 +22,7 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 	
 	
 	@Query(value = "SELECT * FROM courses WHERE courseCategory.id = :category.id", nativeQuery = true)
-	List<CourseEntity> findByCourseCategory(@Param("category") CourseCategoryEntity category);
+	List<CourseDTO> findByCourseCategory(@Param("category") CourseCategoryEntity category);
 
 //    @Query(value = "SELECT c.name FROM courses c WHERE c.publisher.id = :authorId", nativeQuery = true)
 //    Optional<CourseEntity> findAllCourseByAuthorId(@Param("authorId") Long authorId);

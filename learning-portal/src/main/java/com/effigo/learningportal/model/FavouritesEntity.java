@@ -1,6 +1,7 @@
 package com.effigo.learningportal.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -39,11 +41,10 @@ public class FavouritesEntity {
 	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private CourseEntity course;
-	
-	
+
 	@Column(name = "created_at")
 	@CreationTimestamp
-	private Date createdAt;	
+	private Date createdAt;
 
 	@Column(name = "updated_at")
 	@UpdateTimestamp

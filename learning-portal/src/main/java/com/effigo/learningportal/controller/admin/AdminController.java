@@ -70,13 +70,14 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/{adminId}")
-	public ResponseEntity<?> deleteUser(@PathVariable("adminId") Long adminId, @RequestParam("userId") Optional<Long> userId) {
+	public ResponseEntity<?> deleteUser(@PathVariable("adminId") Long adminId,
+			@RequestParam("userId") Optional<Long> userId) {
 
 		try {
-			if(userId.isPresent())
+			if (userId.isPresent())
 				return adminServiceImpl.deleteUserById(adminId, userId.get());
 			else {
-				return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body("please provide valid user and admin id");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("please provide valid user and admin id");
 			}
 
 		} catch (Exception e) {

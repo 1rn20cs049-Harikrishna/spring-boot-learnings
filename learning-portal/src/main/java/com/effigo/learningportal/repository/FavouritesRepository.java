@@ -17,6 +17,6 @@ public interface FavouritesRepository extends JpaRepository<FavouritesEntity, Lo
 //	 @Query("SELECT c FROM CourseEntity c INNER JOIN c.favourites f WHERE f.user.id = :userId")
 	Optional<FavouritesEntity> findByUserIdAndCourseId(Long uid, Long cid);
 
-	@Query("Select f from FavouritesEntity f Where f.user.id = :userId")
-	List<CourseEntity> findAllByUserId(@Param("userId") Long userId);
+//	@Query("Select f. from FavouritesEntity f Where f.user.id = :userId")
+//	List<CourseEntity> findAllByUserId(@Param("userId") Long userId);
 }

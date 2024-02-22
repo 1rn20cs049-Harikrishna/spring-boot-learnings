@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.effigo.learningportal.model.UserEntity;
 
 @RestController
-public class loginController {
+public class LoginController {
 
 	@PostMapping("/login")
 	public ResponseEntity<String> userLogin(@RequestBody UserEntity user) {
 		return  ResponseEntity.status(HttpStatus.OK).body("User logged in successfully");
-
 	}
 
 }
