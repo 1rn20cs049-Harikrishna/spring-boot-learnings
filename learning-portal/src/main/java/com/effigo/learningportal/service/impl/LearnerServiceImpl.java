@@ -3,7 +3,6 @@ package com.effigo.learningportal.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +48,8 @@ public class LearnerServiceImpl implements LearnerService {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
 						.body("No courses exists with the provided course id");
 			}
-
-			return ResponseEntity.status(HttpStatus.OK).body(courseEntities.stream()
-					.map(CoursePopulator.INSTANCE::CourseEntityToDto).collect(Collectors.toList()));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(courseEntities.stream().map(CoursePopulator.INSTANCE::courseEntityToDto).toList());
 		} catch (Exception e) {
 			log.info("LearnerServiceImpl:: searchCourseById  " + e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -61,16 +59,22 @@ public class LearnerServiceImpl implements LearnerService {
 
 	@Override
 	public ResponseEntity<?> searchCourseByCategory(Long categoryId) {
-		// Check if the category with the given ID exists
-		Optional<CourseCategoryEntity> categoryOptional = courseCategoryRepository.findById(categoryId);
 
-		if (categoryOptional.isPresent()) {
-			// Category found, retrieve courses in that category
-			CourseCategoryEntity category = categoryOptional.get();
+		try {
+			/* Check if the category with the given ID exists */
+			Optional<CourseCategoryEntity> categoryOptional = courseCategoryRepository.findById(categoryId);
 
-			return ResponseEntity.status(HttpStatus.OK).body(category.getCourses());
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("provide proper course category id");
+			if (categoryOptional.isPresent()) {
+				/* Category found, retrieve courses in that category */
+				CourseCategoryEntity category = categoryOptional.get();
+
+				return ResponseEntity.status(HttpStatus.OK).body(category.getCourses());
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("provide proper course category id");
+			}
+		} catch (Exception e) {
+			log.info("LearnerServiceImpl:: searchCourseByCategory " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(" " + e.getMessage());
 		}
 	}
 
@@ -168,7 +172,6 @@ public class LearnerServiceImpl implements LearnerService {
 	@Override
 	public ResponseEntity<?> getAllFavouriteByUserId(Long uid) {
 		try {
-
 			Optional<UserEntity> userEntity = userRepository.findById(uid);
 			if (userEntity.isPresent()) {
 				List<FavouritesEntity> favouritesEntities = userEntity.get().getFavourites();
@@ -184,7 +187,7 @@ public class LearnerServiceImpl implements LearnerService {
 		} catch (Exception e) {
 			// Handle exceptions appropriately, e.g., log the error
 			log.info("LearnerServiceImpl::getAllFavouriteByUserId  Some error " + e.getMessage());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

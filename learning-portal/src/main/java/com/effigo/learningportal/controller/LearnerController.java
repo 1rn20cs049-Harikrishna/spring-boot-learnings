@@ -1,6 +1,5 @@
-package com.effigo.learningportal.controller.learner;
+package com.effigo.learningportal.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.effigo.learningportal.dto.CourseDTO;
-import com.effigo.learningportal.model.CourseEntity;
 import com.effigo.learningportal.service.impl.LearnerServiceImpl;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -59,17 +56,15 @@ public class LearnerController {
 	/* for searching the course ,we are using the query params */
 	@GetMapping("/search")
 	public ResponseEntity<?> searchCourse(@RequestParam("courseId") Optional<Long> courseId,
-			@RequestParam("courseCatId") Optional<Long> courseCatId, @RequestParam("userId") Optional<Long> userId) {
+			@RequestParam("courseCategoryId") Optional<Long> courseCatId,
+			@RequestParam("userId") Optional<Long> userId) {
 		if (courseId.isPresent()) {
 			return learnerServiceImpl.searchCourseById(courseId.get());
 		} else if (courseCatId.isPresent()) {
 			return learnerServiceImpl.searchCourseByCategory(courseCatId.get());
 		}
-		// else if (userId.isPresent()) {
-//			return ResponseEntity.status(HttpStatus.ACCEPTED)
-//					.body(learnerServiceImpl.searchCourseByAuthor(userId.get()));
-//		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Search by courseId ,courseCategoryId , publisherId");
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Search by courseId ,courseCategoryId ");
 	}
 
 	@GetMapping("/{userId}/favourites")

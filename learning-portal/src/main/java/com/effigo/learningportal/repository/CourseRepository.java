@@ -19,12 +19,8 @@ public interface CourseRepository extends JpaRepository<CourseEntity, Long> {
 
 	@Query(value = "SELECT * FROM courses WHERE publisher_id = :publisherId", nativeQuery = true)
 	List<CourseEntity> findAllByPublisherId(Long publisherId);
-	
-	
+
 	@Query(value = "SELECT * FROM courses WHERE courseCategory.id = :category.id", nativeQuery = true)
 	List<CourseDTO> findByCourseCategory(@Param("category") CourseCategoryEntity category);
-
-//    @Query(value = "SELECT c.name FROM courses c WHERE c.publisher.id = :authorId", nativeQuery = true)
-//    Optional<CourseEntity> findAllCourseByAuthorId(@Param("authorId") Long authorId);
 
 }

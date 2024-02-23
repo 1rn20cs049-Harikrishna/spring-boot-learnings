@@ -12,8 +12,6 @@ public interface AdminService {
 
 	public List<UserDTO> getUsers();
 
-	/* public void deleteUsers(); */
-
 	public String adminHome();
 
 	public ResponseEntity<?> createUser(UserDTO userDTO, Long adminId);

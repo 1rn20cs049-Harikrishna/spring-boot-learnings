@@ -2,13 +2,13 @@ package com.effigo.learningportal.service.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.dto.UserDTO;
+import com.effigo.learningportal.exception.UserFetchingException;
 import com.effigo.learningportal.mapper.UserMapper;
 import com.effigo.learningportal.model.RolesEntity;
 import com.effigo.learningportal.model.UserEntity;
@@ -34,14 +34,6 @@ public class AdminServiceImpl implements AdminService {
 
 			if (userEntityCheck.isPresent()) {
 				UserEntity isUserAdmin = userEntityCheck.get();
-				/*
-				 * Optional<RolesEntity> adminRoleOptional = rolesRepository.findById((long) 1);
-				 * 
-				 * if(!adminRoleOptional.isPresent()) {
-				 * ResponseEntity.status(HttpStatus.BAD_REQUEST).
-				 * body("Don't know whether user is normal user or admin"); } RolesEntity
-				 * rolesEntity = adminRoleOptional.orElse(null);
-				 */
 
 				if (isUserAdmin.getRole() != null && isUserAdmin.getRole().getId().equals((long) 1)) {
 
@@ -119,20 +111,13 @@ public class AdminServiceImpl implements AdminService {
 
 		try {
 			List<UserEntity> users = userRepository.findAll();
-			return users.stream().map(UserMapper.INSTANCE::toDto).collect(Collectors.toList());
+			return users.stream().map(UserMapper.INSTANCE::toDto).toList();
 		} catch (Exception e) {
 			log.info("AdminServiceImpl::getUsers " + e.getMessage());
-			throw new RuntimeException("Something went wrong " + e.getMessage());
+			throw new UserFetchingException("Something went wrong " + e.getMessage());
 
 		}
 	}
-
-	/*
-	 * @Override public void deleteUsers() {
-	 * 
-	 * try { userRepository.deleteAll(); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 */
 
 	@Override
 	public ResponseEntity<?> deleteUserById(Long adminId, Long userId) {

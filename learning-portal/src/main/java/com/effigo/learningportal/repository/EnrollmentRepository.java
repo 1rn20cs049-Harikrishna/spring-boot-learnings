@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.effigo.learningportal.model.CourseEntity;
 import com.effigo.learningportal.model.EnrollmentEntity;
-import com.effigo.learningportal.model.UserEntity;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<EnrollmentEntity, Long> {

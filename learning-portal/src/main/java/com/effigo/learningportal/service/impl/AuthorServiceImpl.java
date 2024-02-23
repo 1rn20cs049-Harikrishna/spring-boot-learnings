@@ -3,7 +3,6 @@ package com.effigo.learningportal.service.impl;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.effigo.learningportal.dto.CourseDTO;
 import com.effigo.learningportal.exception.AccessDeniedException;
-import com.effigo.learningportal.exception.CourseNotFoundException;
 import com.effigo.learningportal.mapper.CoursePopulator;
 import com.effigo.learningportal.model.CourseCategoryEntity;
 import com.effigo.learningportal.model.CourseEntity;
@@ -41,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
 			/* checking user exists are not */
 			Optional<UserEntity> userEntityOptional = userRepository.findById(authorId);
 
-			CourseEntity course = CoursePopulator.INSTANCE.CourseDtoToEntity(courseDto);
+			CourseEntity course = CoursePopulator.INSTANCE.courseDtoToEntity(courseDto);
 
 			/* checking for user mentioned category exists are not */
 			Optional<CourseCategoryEntity> courseCategoryEntityOptional = courseCategoryRepository
@@ -55,7 +53,7 @@ public class AuthorServiceImpl implements AuthorService {
 					CourseCategoryEntity courseCategoryEntity = courseCategoryEntityOptional.get();
 					course.setCourseCategory(courseCategoryEntity);
 					return ResponseEntity.status(HttpStatus.CREATED)
-							.body(CoursePopulator.INSTANCE.CourseEntityToDto(courseRepository.save(course)));
+							.body(CoursePopulator.INSTANCE.courseEntityToDto(courseRepository.save(course)));
 				}
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not an author to create the course");
 
@@ -83,7 +81,7 @@ public class AuthorServiceImpl implements AuthorService {
 				}
 
 				CourseEntity updatedCourse = courseRepository.save(existingCourse);
-				return CoursePopulator.INSTANCE.CourseEntityToDto(updatedCourse);
+				return CoursePopulator.INSTANCE.courseEntityToDto(updatedCourse);
 			} else {
 				/*
 				 * User is not authorized to modify this course You can throw an exception,
@@ -136,7 +134,7 @@ public class AuthorServiceImpl implements AuthorService {
 		try {
 			List<CourseEntity> courses = courseRepository.findAllByPublisherId(authorId);
 
-			return courses.stream().map(CoursePopulator.INSTANCE::CourseEntityToDto).collect(Collectors.toList());
+			return courses.stream().map(CoursePopulator.INSTANCE::courseEntityToDto).toList();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Collections.emptyList();

@@ -1,4 +1,4 @@
-package com.effigo.learningportal.controller.admin;
+package com.effigo.learningportal.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -86,12 +86,6 @@ public class AdminController {
 		}
 	}
 
-	/*
-	 * @DeleteMapping("deleteAll") public ResponseEntity<String> deleteUsers() {
-	 * adminServiceImpl.deleteUsers(); return
-	 * ResponseEntity.status(HttpStatus.NO_CONTENT).
-	 * body("ContentSuccessfully Deleted!!!"); }
-	 */
 
 	@GetMapping()
 	public ResponseEntity<String> adminHome() {
