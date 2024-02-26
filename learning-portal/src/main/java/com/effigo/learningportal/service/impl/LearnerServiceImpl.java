@@ -147,7 +147,8 @@ public class LearnerServiceImpl implements LearnerService {
 						EnrollmentEntity enrollment = new EnrollmentEntity();
 						enrollment.setUser(user);
 						enrollment.setCourse(course);
-
+						
+						user.getEnrollments().add(enrollment);
 						/* Save the enrollment to the database */
 						enrollmentRepository.save(enrollment);
 						return ResponseEntity.status(HttpStatus.CREATED).body("Enrollment successful!");

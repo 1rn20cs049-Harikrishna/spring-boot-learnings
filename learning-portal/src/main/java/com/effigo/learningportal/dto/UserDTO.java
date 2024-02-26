@@ -29,11 +29,11 @@ public class UserDTO {
 
 	private String password;
 
-	private Set<CourseEntity> publishedCourses;
+	private List<CourseEntity> publishedCourses;
 
 	private List<FavouritesEntity> favourites;
 
-	private Set<EnrollmentEntity> enrollments;
+	private List<EnrollmentEntity> enrollments;
 
 	private Date createdAt;
 
