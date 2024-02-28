@@ -32,9 +32,3 @@ Spring Boot is a convention-over-configuration extension for the Spring Java pla
 # Learning portal 
 ### API 
 
-1. AUTHOR
-   ``` https://api.postman.com/collections/21762130-6c8e61dc-272c-4b02-a4b8-f67e7ccf2106?access_key=PMAT-01HQHW83TTQJW9KDBA74VEKBZ5 ```
-2. ADMIN
-    ``` https://api.postman.com/collections/21762130-5d4a4c72-f467-4475-8d31-c3d13f971b4c?access_key=PMAT-01HQ7RPHRQPD9HA3301BT5RQE9 ```
-3. LEARNER
-    ``` https://api.postman.com/collections/21762130-7c08c045-07be-4601-8885-36d51dcfef0b?access_key=PMAT-01HQHWFDYX2YTAJEZ7DFXY3RFT ```
